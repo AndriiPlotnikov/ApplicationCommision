@@ -10,8 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * for classes that execute user requests
+ *
  * @author andre
  */
 public interface Command {
+
+    /**
+     * for responsibilities
+     * 
+     * @param request
+     * @param response 
+     */
     void execute(HttpServletRequest request, HttpServletResponse response);
 }

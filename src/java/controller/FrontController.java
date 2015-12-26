@@ -5,12 +5,9 @@
  */
 package controller;
 
-import application.properties.Mapping;
 import controller.commands.Command;
 import controller.commands.CommandFactory;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map.Entry;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,10 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ * FrontController for whole app
+ * 
  * @author andre
  */
-@WebServlet(name = "FrontController", urlPatterns = {"/*"})
+@WebServlet(name = "FrontController", urlPatterns = {"/app/*"})
 public class FrontController extends HttpServlet {
 
     /**
@@ -35,35 +33,13 @@ public class FrontController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet FrontController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet FrontController at " + request.getContextPath() + "</h1>");
-            if(Mapping.getInstance() == null){
-                System.out.println("wat?");
-            }
-            for(Entry<Object,Object> entry : Mapping.getInstance().entrySet()){
-                if (entry == null){
-                    System.out.println("entry is null");
-                } else {
-                    System.out.println(entry.getValue());
-                }
-                
-            }
-            out.println("</body>");
-            out.println("</html>");
-         //CommandFactory factory = CommandFactory.getInstance();
+
+        CommandFactory factory = CommandFactory.getInstance();
 
         // relativeURI found from full URI
-        //String relativeURL = request.getRequestURI().toLowerCase().substring(request.getContextPath().length());
-        //Command command = factory.getCommand(relativeURL);
-        //command.execute(request, response);
-        }
+        String relativeURL = request.getRequestURI().toLowerCase().substring(request.getContextPath().length());
+        Command command = factory.getCommand(relativeURL);
+        command.execute(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
